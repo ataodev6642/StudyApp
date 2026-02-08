@@ -1,0 +1,289 @@
+/* studyapp/css/style.css */
+
+/* ===== 全体 ===== */
+* {
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  background: #f5f6fa;
+}
+
+/* ===== サイドバー ===== */
+.sidebar {
+  width: 220px;
+  background: #1e1e2f;
+  color: #fff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  color: #bbb;
+  padding: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.menu-btn:hover {
+  background: #2a2a40;
+  color: #fff;
+}
+
+.menu-btn.active {
+  background: #4f46e5;
+  color: #fff;
+}
+
+/* ===== メインコンテンツ ===== */
+.content {
+  flex: 1;
+  padding: 40px 20px 20px 20px; /* 上に余裕を持たせる */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 中央寄せ */
+  position: relative;
+}
+
+/* ===== 広告バナー対策 ===== */
+/* バナーを上中央に固定 */
+#vdbanner {
+  width: 100%;
+  max-width: 468px;
+  margin: 10px auto 20px auto; /* 上に余裕、中央寄せ */
+  display: block;
+  text-align: center;
+  position: relative; /* relativeのままでOK */
+  left: 0; /* 左右リセット */
+  top: 0;  /* 上リセット */
+}
+
+
+/* ===== ページ切り替え ===== */
+.page {
+  display: none;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page.active {
+  display: flex;
+}
+
+/* ===== タイマータイトル ===== */
+.timertitle {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 28px;
+}
+
+/* ===== 入力カード ===== */
+.card, .todo-input, .todo-item {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px auto;
+}
+
+/* ラベル・入力 */
+.card label, .todo-input label {
+  font-size: 14px;
+}
+
+.card input, .todo-input input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+}
+
+/* ボタン */
+.card button, .todo-input button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+#startBtn {
+  background: #4f46e5;
+  color: white;
+}
+
+#manualBtn {
+  background: #ddd;
+  color: #333;
+}
+
+.todo-input button {
+  background: #4f46e5;
+  color: white;
+}
+
+.card button:hover, .todo-input button:hover {
+  opacity: 0.9;
+}
+
+/* ===== タイマー表示 ===== */
+.timer-display {
+  margin: 30px 0;
+  font-size: 64px;
+  font-weight: bold;
+  text-align: center;
+  max-width: 100%;
+  word-break: break-word;
+}
+
+/* ===== 情報 ===== */
+.info {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* ===== ログ ===== */
+#log {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+#log div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.log-buttons button {
+  margin-left: 8px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 16px;
+}
+
+/* ===== モーダル ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* ===== ToDoカード ===== */
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ===== グラフ ===== */
+#studyGraph {
+  max-width: 100%;
+  margin: 0 auto;
+  display: block;
+}
+
+/* ===== 認証ボタン ===== */
+.auth-btn-wrapper {
+  text-align: center;
+  width: 100%;
+  margin: 20px 0;
+}
+
+#authBtn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #4f46e5;
+  color: white;
+  font-weight: bold;
+}
+
+#authBtn:hover {
+  background-color: #3730a3;
+}
+
+/* ===== モバイル対応 ===== */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px;
+  }
+  .menu-btn {
+    flex: 1 0 auto;
+    text-align: center;
+    margin: 0 5px;
+  }
+  .content {
+    padding: 20px 10px;
+  }
+  .timer-display {
+    font-size: 48px;
+  }
+}
