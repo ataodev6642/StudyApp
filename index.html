@@ -1,0 +1,114 @@
+<!-- studyapp/index.html -->
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Study App</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+  <!-- サイドメニュー -->
+  <aside class="sidebar">
+    <h2 class="logo">Study</h2>
+    <button class="menu-btn active" data-page="timer">タイマー</button>
+    <button class="menu-btn" data-page="todo">ToDo</button>
+    <button class="menu-btn" data-page="graph">グラフ</button>
+    <div class="auth-btn-wrapper">
+  <button id="authBtn">ログイン</button>
+</div>
+  </aside>
+
+  <!-- サイドバーの下に追加 -->
+
+
+
+  <!-- メインコンテンツ -->
+  <main class="content">
+
+    <!-- タイマーページ -->
+    <section id="timer" class="page active">
+      <h1 class="timertitle">📚 勉強タイマー</h1>
+
+      <div class="card">
+        <label>教科</label>
+        <input id="subject" placeholder="例：数学">
+
+        <label>内容</label>
+        <input id="detail" placeholder="例：一次関数">
+
+        <label>勉強時間（分）</label>
+        <input id="minutes" type="number" min="1">
+
+        <button id="startBtn">タイマースタート</button>
+        <button id="manualBtn">手入力で記録</button>
+      </div>
+
+      <div class="timer-display" id="timerDisplay">00:00</div>
+
+      <div class="info">
+        <div id="todayTotal">今日の合計：0分</div>
+        <div id="streak">🔥 ストリーク：0日</div>
+      </div>
+
+      <h2>記録</h2>
+      <div id="log">
+        <div>
+  <div class="log-buttons">
+    <button class="edit">✏️</button>
+    <button class="delete">🗑</button>
+  </div>
+</div>
+
+      </div>
+
+      <!-- 編集モーダル -->
+      <div id="editModal" class="modal hidden">
+        <div class="modal-content">
+          <h3>記録を編集</h3>
+          <input id="editSubject" placeholder="教科">
+          <input id="editDetail" placeholder="内容">
+          <input id="editMinutes" type="number" placeholder="分">
+          <div class="modal-buttons">
+            <button id="updateBtn">更新</button>
+            <button id="cancelBtn">キャンセル</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+<!-- ToDoページ -->
+<section id="todo" class="page">
+  <h1>ToDo</h1>
+
+  <div class="card todo-input">
+    <label>タイトル</label>
+    <input id="todoTitle" placeholder="例：数学の宿題">
+
+    <label>詳細</label>
+    <input id="todoDetail" placeholder="例：問題集1〜10ページ">
+
+    <button id="addTodoBtn">追加</button>
+  </div>
+
+  <div id="todoList"></div>
+</section>
+
+
+    <!-- グラフページ -->
+    <section id="graph" class="page">
+      <h1>グラフ</h1>
+      <canvas id="studyGraph" width="600" height="300"></canvas>
+    </section>
+    
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="./js/main.js"></script>
+  <script type="module" src="./js/timer.js"></script>
+  <script type="module" src="/js/todos.js"></script>
+  <script type="module" src="./js/graph.js"></script>
+</body>
+</html>
+
