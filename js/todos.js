@@ -45,17 +45,7 @@ const todoList = document.getElementById("todoList");
 let currentUser = null;
 let editingId = null;
 
-/* ===== Auth ===== */
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    const result = await signInWithPopup(auth, provider);
-    user = result.user;
-  }
 
-  currentUser = user;
-
-  loadTodos();
-});
 
 /* ===== ToDo追加 ===== */
 addTodoBtn.onclick = async () => {
