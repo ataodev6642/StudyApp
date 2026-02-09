@@ -1,7 +1,6 @@
 // studyapp/js/todos.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { db } from "./firebase.js";
 import {
-  getFirestore,
   collection,
   addDoc,
   getDocs,
@@ -13,28 +12,6 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-/* ===== Firebase ===== */
-const firebaseConfig = {
-  apiKey: "AIzaSyCeAxPKmoIzbmbK8MM-lDRJBtJFjWaLR-A",
-  authDomain: "studyapp-debb8.firebaseapp.com",
-  projectId: "studyapp-debb8",
-  storageBucket: "studyapp-debb8.firebasestorage.app",
-  messagingSenderId: "742083836001",
-  appId: "1:742083836001:web:e15fa7958b088859a61220"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
-
 /* ===== DOM ===== */
 const todoTitle = document.getElementById("todoTitle");
 const todoDetail = document.getElementById("todoDetail");
@@ -42,19 +19,21 @@ const addTodoBtn = document.getElementById("addTodoBtn");
 const todoList = document.getElementById("todoList");
 
 /* ===== 状態 ===== */
-let currentUser = null;
 let editingId = null;
 
-
-
-/* ===== ToDo追加 ===== */
+/* ===== ToDo追加 / 更新 ===== */
 addTodoBtn.onclick = async () => {
+  if (!window.currentUser) {
+    alert("ログインしてください");
+    return;
+  }
+
   const title = todoTitle.value.trim();
   const detail = todoDetail.value.trim();
   if (!title) return alert("タイトルを入力してください");
 
   if (editingId) {
-    // 編集中
+    // 更新
     await updateDoc(doc(db, "todos", editingId), {
       title,
       detail
@@ -62,8 +41,9 @@ addTodoBtn.onclick = async () => {
     editingId = null;
     addTodoBtn.textContent = "追加";
   } else {
+    // 新規追加
     await addDoc(collection(db, "todos"), {
-      uid: currentUser.uid,
+      uid: window.currentUser.uid,
       title,
       detail,
       done: false,
@@ -78,12 +58,20 @@ addTodoBtn.onclick = async () => {
 
 /* ===== 表示 ===== */
 async function loadTodos() {
+  if (!window.currentUser) return;
+
   todoList.innerHTML = "";
-  const q = query(collection(db, "todos"), where("uid", "==", currentUser.uid));
+
+  const q = query(
+    collection(db, "todos"),
+    where("uid", "==", window.currentUser.uid)
+  );
+
   const snap = await getDocs(q);
 
   snap.forEach(docSnap => {
     const data = docSnap.data();
+
     const div = document.createElement("div");
     div.className = "card todo-item";
 
@@ -91,7 +79,7 @@ async function loadTodos() {
       <div class="todo-main" style="display:flex; justify-content:space-between; align-items:center;">
         <div>
           <input type="checkbox" class="todo-done" ${data.done ? "checked" : ""}>
-          <strong>${data.title}</strong> - ${data.detail}
+          <strong>${data.title}</strong> - ${data.detail ?? ""}
         </div>
         <div>
           <button class="edit">✏️</button>
@@ -111,7 +99,7 @@ async function loadTodos() {
     // 編集
     div.querySelector(".edit").onclick = () => {
       todoTitle.value = data.title;
-      todoDetail.value = data.detail;
+      todoDetail.value = data.detail ?? "";
       editingId = docSnap.id;
       addTodoBtn.textContent = "更新";
     };
@@ -127,3 +115,5 @@ async function loadTodos() {
   });
 }
 
+/* ===== auth.js から呼べるように公開 ===== */
+window.loadTodos = loadTodos;
