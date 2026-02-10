@@ -72,3 +72,7 @@ async function updateGraph() {
 
 /* ===== グローバル公開 ===== */
 window.updateGraph = updateGraph;
+
+
+
+

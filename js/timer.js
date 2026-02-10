@@ -237,3 +237,4 @@ window.loadAll = function () {
   loadStreak();
   loadLogs();
 };
+
