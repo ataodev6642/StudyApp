@@ -10,7 +10,8 @@ import {
   setDoc,
   doc,
   deleteDoc,
-  updateDoc
+  updateDoc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 /* ===== DOM ===== */
@@ -23,6 +24,11 @@ const timerEl = document.getElementById("timerDisplay");
 const logEl = document.getElementById("log");
 const todayTotalEl = document.getElementById("todayTotal");
 const streakEl = document.getElementById("streak");
+
+const weeklyGoalInput = document.getElementById("weeklyGoalInput");
+const saveWeeklyGoalBtn = document.getElementById("saveWeeklyGoalBtn");
+const weeklyStatus = document.getElementById("weeklyStatus");
+const progressFill = document.getElementById("progressFill");
 
 /* モーダル */
 const editModal = document.getElementById("editModal");
@@ -37,7 +43,10 @@ let interval = null;
 let remaining = 0;
 let editingId = null;
 
-/* ===== タイマー ===== */
+/* =================================================
+   タイマー
+================================================= */
+
 startBtn.onclick = () => {
   if (!window.currentUser) {
     alert("ログインしてください");
@@ -70,10 +79,14 @@ function tick() {
 function updateTimer() {
   const m = Math.floor(remaining / 60);
   const s = remaining % 60;
-  timerEl.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  timerEl.textContent =
+    `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
-/* ===== 手入力 ===== */
+/* =================================================
+   手入力
+================================================= */
+
 manualBtn.onclick = () => {
   if (!window.currentUser) {
     alert("ログインしてください");
@@ -89,7 +102,10 @@ manualBtn.onclick = () => {
   saveStudyRecord(minutes);
 };
 
-/* ===== 保存 ===== */
+/* =================================================
+   保存
+================================================= */
+
 async function saveStudyRecord(minutes) {
   if (!window.currentUser) return;
 
@@ -108,7 +124,10 @@ async function saveStudyRecord(minutes) {
   loadAll();
 }
 
-/* ===== 編集モーダル ===== */
+/* =================================================
+   編集モーダル（元のまま保持）
+================================================= */
+
 function openEditModal(id, data) {
   editingId = id;
   editSubject.value = data.subject;
@@ -136,7 +155,10 @@ updateBtn.onclick = async () => {
   loadAll();
 };
 
-/* ===== ログ表示 ===== */
+/* =================================================
+   ログ表示（削除・編集含め元のまま）
+================================================= */
+
 async function loadLogs() {
   if (!window.currentUser) return;
 
@@ -179,7 +201,10 @@ async function loadLogs() {
   });
 }
 
-/* ===== 今日の合計 ===== */
+/* =================================================
+   今日の合計
+================================================= */
+
 async function loadTodayTotal() {
   if (!window.currentUser) return;
 
@@ -199,7 +224,10 @@ async function loadTodayTotal() {
   todayTotalEl.textContent = `今日の合計：${total}分`;
 }
 
-/* ===== ストリーク ===== */
+/* =================================================
+   ストリーク
+================================================= */
+
 async function loadStreak() {
   if (!window.currentUser) return;
 
@@ -223,7 +251,76 @@ async function loadStreak() {
   streakEl.textContent = `🔥 ストリーク：${streak}日`;
 }
 
-/* ===== 共通 ===== */
+/* =================================================
+   週間目標機能（追加部分のみ）
+================================================= */
+
+if (saveWeeklyGoalBtn) {
+  saveWeeklyGoalBtn.onclick = async () => {
+    if (!window.currentUser) return;
+
+    const goal = Number(weeklyGoalInput.value);
+    if (!goal || goal <= 0) return alert("正しい目標を入力して");
+
+    await setDoc(doc(db, "weeklyGoals", window.currentUser.uid), {
+      goal,
+      updatedAt: serverTimestamp()
+    });
+
+    loadWeeklyProgress();
+  };
+}
+
+function getStartOfWeek() {
+  const now = new Date();
+  const day = now.getDay();
+  const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+  return new Date(now.setDate(diff)).toISOString().slice(0, 10);
+}
+
+async function loadWeeklyProgress() {
+  if (!window.currentUser) return;
+
+  const startOfWeek = getStartOfWeek();
+  const today = new Date().toISOString().slice(0, 10);
+
+  const goalSnap = await getDoc(doc(db, "weeklyGoals", window.currentUser.uid));
+  const goal = goalSnap.exists() ? goalSnap.data().goal : 0;
+
+  const q = query(
+    collection(db, "studyLogs"),
+    where("uid", "==", window.currentUser.uid)
+  );
+
+  const snap = await getDocs(q);
+
+  let total = 0;
+  snap.forEach(d => {
+    const date = d.data().date;
+    if (date >= startOfWeek && date <= today) {
+      total += d.data().minutes;
+    }
+  });
+
+  const percent = goal ? Math.min((total / goal) * 100, 100) : 0;
+
+  if (weeklyStatus)
+    weeklyStatus.textContent =
+      `今週：${total} / ${goal} 分（${Math.floor(percent)}%）`;
+
+  if (progressFill)
+    progressFill.style.width = percent + "%";
+
+  if (percent >= 100 && progressFill) {
+    progressFill.style.background =
+      "linear-gradient(90deg, gold, orange)";
+  }
+}
+
+/* =================================================
+   共通
+================================================= */
+
 function resetForm() {
   subjectInput.value = "";
   detailInput.value = "";
@@ -231,10 +328,13 @@ function resetForm() {
   timerEl.textContent = "00:00";
 }
 
-/* ===== 外部から呼べるように ===== */
+/* =================================================
+   外部公開
+================================================= */
+
 window.loadAll = function () {
   loadTodayTotal();
   loadStreak();
   loadLogs();
+  loadWeeklyProgress(); // ← 追加
 };
-

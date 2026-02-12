@@ -30,7 +30,6 @@
     <!-- タイマーページ -->
     <section id="timer" class="page active">
       <h1 class="timertitle">📚 勉強タイマー</h1>
-
       <div class="card">
         <label>教科</label>
         <input id="subject" placeholder="例：数学">
@@ -46,7 +45,18 @@
       </div>
 
       <div class="timer-display" id="timerDisplay">00:00</div>
+      <div class="card">
+        <h3>📅 今週の目標</h3>
 
+        <input id="weeklyGoalInput" type="number" placeholder="目標（分）">
+        <button id="saveWeeklyGoalBtn">保存</button>
+
+        <div id="weeklyStatus">今週：0 / 0 分（0%）</div>
+
+        <div class="progress-bar">
+          <div id="progressFill"></div>
+        </div>
+      </div>
       <div class="info">
         <div id="todayTotal">今日の合計：0分</div>
         <div id="streak">🔥 ストリーク：0日</div>
@@ -115,4 +125,3 @@
 <script src="./js/main.js"></script>
 </body>
 </html>
-
