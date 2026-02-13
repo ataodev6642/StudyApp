@@ -27,15 +27,25 @@ onAuthStateChanged(auth, (user) => {
 
     // 各機能の初期化（少し待機して関数が登録されるのを確実にする）
     setTimeout(() => {
-      window.loadAll?.();
-      window.loadTodos?.();
-      window.updateGraph?.();
-    }, 200);
+  window.loadAll?.();
+  window.loadTodos?.();
+  window.updateGraph?.();
+  window.loadCards?.(); // ← 追加
+}, 200);
+
 
   } else {
-    window.currentUser = null;
-    authBtn.textContent = "ログイン";
-  }
+  window.currentUser = null;
+  authBtn.textContent = "ログイン";
+
+  document.getElementById("log").innerHTML = "";
+  document.getElementById("todoList").innerHTML = "";
+  document.getElementById("todayTotal").textContent = "今日の合計：0分";
+  document.getElementById("streak").textContent = "🔥 ストリーク：0日";
+  document.getElementById("weeklyStatus").textContent = "今週：0 / 0 分（0%）";
+  document.getElementById("progressFill").style.width = "0%";
+}
+
 });
 
 /* ===== ログイン / ログアウト ===== */

@@ -303,3 +303,129 @@ body {
   background: linear-gradient(90deg, #4caf50, #81c784);
   transition: width 0.4s ease;
 }
+
+
+/* =========================
+   カード表示エリア（親要素）
+   ========================= */
+.card-display {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  /* align-items を center にすることで、カードが縦に伸びるのを防ぐ */
+  align-items: center; 
+  perspective: 1200px;
+  gap: 16px;
+  width: 100%;
+}
+
+/* =========================
+   カード本体
+   ========================= */
+.flashcard {
+  /* min-width ではなく固定の width を推奨（レスポンシブは max-width で制御） */
+  width: 360px;
+  max-width: 90%; 
+  height: 220px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border-radius: 18px;
+  flex-shrink: 0; /* 親のFlexに潰されないように固定 */
+}
+
+.flashcard.flip {
+  transform: rotateY(180deg);
+}
+
+/* =========================
+   表裏共通（ここが重要）
+   ========================= */
+.flashcard-face {
+  position: absolute;
+  inset: 0;
+  padding: 24px;
+  border-radius: 18px;
+  backface-visibility: hidden;
+
+  display: flex;
+  flex-direction: column; /* 縦並びを許容 */
+  justify-content: center; /* 上下中央 */
+  align-items: center;     /* 左右中央 */
+  text-align: center;
+
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #333;
+
+  background: white;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  
+  /* テキストの挙動を安定させる */
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal; /* 変な縦書き化を防ぐ */
+}
+
+/* 文字が縦に1文字ずつ並ぶのを防ぐための強制設定 */
+.flashcard-face * {
+  writing-mode: horizontal-tb !important;
+}
+
+/* =========================
+   表面・裏面の装飾
+   ========================= */
+.flashcard-face:first-child {
+  background: linear-gradient(135deg, #ffffff, #f8faff);
+  border: 1px solid #e0e6ed;
+}
+
+.flashcard-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #fdfdfd, #f0f4ff);
+  overflow-y: auto; /* 長文の時はスクロール可能に */
+}
+
+/* =========================
+   理解度ボタン
+   ========================= */
+.card-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.card-actions button {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.card-actions button:hover {
+  transform: translateY(-2px);
+  filter: brightness(0.95);
+}
+
+.card-actions button[data-level="0"] { background: #ffeded; color: #ff5c5c; }
+.card-actions button[data-level="1"] { background: #fff9db; color: #fab005; }
+.card-actions button[data-level="2"] { background: #ebfbee; color: #40c057; }
+
+/* =========================
+   スマホ最適化
+   ========================= */
+@media (max-width: 600px) {
+  .flashcard {
+    height: 200px;
+  }
+  .flashcard-face {
+    font-size: 18px;
+    padding: 16px;
+  }
+}

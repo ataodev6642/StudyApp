@@ -15,7 +15,7 @@
     <button class="menu-btn active" data-page="timer">タイマー</button>
     <button class="menu-btn" data-page="todo">ToDo</button>
     <button class="menu-btn" data-page="graph">グラフ</button>
-    <div class="auth-btn-wrapper">
+    <button class="menu-btn" data-page="cards">暗記</button>    <div class="auth-btn-wrapper">
   <button id="authBtn">ログイン</button>
 </div>
   </aside>
@@ -113,6 +113,21 @@
       <canvas id="studyGraph" width="600" height="300"></canvas>
     </section>
     
+<section id="cards" class="page">
+  <h1>暗記カード</h1>
+
+  <div class="card">
+    <input id="cardSubject" placeholder="教科">
+    <input id="cardQuestion" placeholder="問題">
+    <input id="cardAnswer" placeholder="答え">
+    <button id="addCardBtn">カード追加</button>
+  </div>
+
+  <div id="cardDisplay" class="card-display"></div>
+</section>
+
+
+
   </main>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module" src="./js/firebase.js"></script>
@@ -121,6 +136,7 @@
 <script type="module" src="./js/timer.js"></script>
 <script type="module" src="./js/todos.js"></script>
 <script type="module" src="./js/graph.js"></script>
+<script type="module" src="./js/cards.js"></script>
 
 <script src="./js/main.js"></script>
 </body>

@@ -120,8 +120,6 @@ window.loadTodos = loadTodos;
 
 
 
-// 自分をグローバルに公開する
-window.loadTodos = loadTodos; // (各ファイル名に合わせて)
 
 // もし読み込み時点でログイン済みなら、自分で自分を動かす
 if (window.currentUser) {
